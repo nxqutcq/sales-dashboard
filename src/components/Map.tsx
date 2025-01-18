@@ -7,9 +7,9 @@ import {
   Circle,
   useMapEvent,
 } from 'react-leaflet'
-
+import { useMap } from 'react-leaflet'
 import { LatLngExpression } from 'leaflet'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface CustomerLocation {
   id: number
@@ -29,6 +29,14 @@ const customers: CustomerLocation[] = [
   },
 ]
 
+const ResizeMap = () => {
+  const map = useMap()
+  useEffect(() => {
+    map.invalidateSize()
+  }, [map])
+  return null
+}
+
 const Map = () => {
   const position: LatLngExpression = [51.50699490391611, -0.11595879422682699]
   const [clickedLocation, setClickedLocation] =
@@ -40,6 +48,7 @@ const Map = () => {
     [51.500156290451265, -0.07871212246618686],
     [51.505392195964, -0.08798327651080352],
   ]
+  
   const MapClickEventHandler = () => {
     useMapEvent('click', (e) => {
       const { lat, lng } = e.latlng
@@ -57,6 +66,7 @@ const Map = () => {
       zoom={14}
       style={{ width: '100%', height: '400px' }}
     >
+      <ResizeMap />
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       {customers.map((customer) => (
         <Marker key={customer.id} position={[customer.lat, customer.lon]}>
